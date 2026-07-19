@@ -500,6 +500,9 @@ function applyI18n(){
   $("#stats").innerHTML = t.stats.map(s=>`<div class="stat"><b>${s[0].replace(/(\+|×)/,'<span class="u">$1</span>')}</b><span>${s[1]}</span></div>`).join("");
   // bars
   $("#bars").innerHTML = BARS.map(b=>`<div class="bar"><div class="lab"><span>${val(b,LANG)}</span><i>${val(b.yrs,LANG)}</i></div><div class="track"><div class="fill" data-w="${b.lvl}"></div></div></div>`).join("");
+  // fills animate in via the reveal observer on first scroll; a language switch re-renders the
+  // bars after the section is already revealed, so populate the new fills' widths directly here.
+  { const rw = $("#bars").closest(".reveal"); if(rw && rw.classList.contains("in")) $("#bars").querySelectorAll(".fill").forEach(f=>f.style.width=f.dataset.w+"%"); }
   // stack + xr
   $("#stackTags").innerHTML = STACK.map(s=>`<span class="tag">${s}</span>`).join("");
   $("#xrTags").innerHTML = XR.map(s=>`<span class="tag">${s}</span>`).join("");
