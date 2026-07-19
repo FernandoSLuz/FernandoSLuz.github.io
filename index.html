@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fernando Silva da Luz — Game Developer</title>
+<meta name="description" content="Fernando Silva da Luz — Game Developer & Gameplay Engineer based in Montréal. Unity, C#, Godot, XR. Portfolio, games and résumés." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080b1a; --bg2:#0d1230; --panel:#111739; --panel2:#161d47;
+  --primary:#7c5cff; --cyan:#34e0ff; --pink:#ff5ca8; --lime:#7dfcb0;
+  --text:#e9ecfb; --muted:#98a0cf; --line:rgba(124,92,255,.22);
+  --glow:0 0 24px rgba(124,92,255,.45);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:'Inter',system-ui,sans-serif;overflow-x:hidden;line-height:1.6;
+}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.01em}
+.arcade{font-family:'Press Start 2P',monospace;letter-spacing:0}
+img{max-width:100%}
+.wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+section{position:relative;padding:84px 0}
+.eyebrow{font-family:'Press Start 2P',monospace;font-size:11px;color:var(--cyan);
+  text-transform:uppercase;display:inline-block;margin-bottom:18px;
+  padding:7px 12px;border:1px solid var(--line);border-radius:8px;background:rgba(52,224,255,.05)}
+.sec-title{font-size:clamp(26px,4vw,40px);margin:0 0 10px}
+.sec-sub{color:var(--muted);max-width:640px;margin:0 0 34px}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- Background canvas ---------- */
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+   radial-gradient(60vw 60vw at 12% -5%,rgba(124,92,255,.20),transparent 60%),
+   radial-gradient(55vw 55vw at 100% 8%,rgba(52,224,255,.14),transparent 60%),
+   radial-gradient(50vw 40vw at 50% 110%,rgba(255,92,168,.12),transparent 60%);}
+main{position:relative;z-index:1}
+
+/* ---------- Nav ---------- */
+header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(8,11,26,.72);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;
+  max-width:1100px;margin:0 auto;padding:12px 22px}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Press Start 2P';font-size:12px;color:var(--text)}
+.logo .dot{width:12px;height:12px;border-radius:3px;background:var(--primary);box-shadow:var(--glow);animation:pulse 2.4s infinite}
+@keyframes pulse{50%{box-shadow:0 0 30px rgba(52,224,255,.7);background:var(--cyan)}}
+nav.links{display:flex;gap:22px;align-items:center}
+nav.links a{color:var(--muted);font-size:14px;font-weight:500;transition:color .2s;position:relative}
+nav.links a:hover{color:var(--text)}
+nav.links a::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;background:var(--cyan);transition:width .25s}
+nav.links a:hover::after{width:100%}
+.lang{display:flex;gap:4px;border:1px solid var(--line);border-radius:10px;padding:4px;background:rgba(255,255,255,.02)}
+.lang button{font-family:'Press Start 2P';font-size:9px;color:var(--muted);background:none;border:0;
+  padding:7px 8px;border-radius:7px;cursor:pointer;transition:.2s}
+.lang button.active{color:#0a0a12;background:var(--cyan);box-shadow:0 0 14px rgba(52,224,255,.5)}
+.menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:8px;color:var(--text);padding:8px 10px;cursor:pointer}
+
+/* ---------- Hero ---------- */
+.hero{min-height:92vh;display:flex;align-items:center;padding-top:40px}
+.badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.chip{font-size:12.5px;color:var(--cyan);border:1px solid var(--line);border-radius:999px;padding:6px 13px;background:rgba(52,224,255,.05)}
+.hero h1{font-size:clamp(40px,7.5vw,82px);line-height:1.02;margin:0 0 6px}
+.hero h1 .grad{background:linear-gradient(120deg,var(--primary),var(--cyan) 55%,var(--pink));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.type-line{font-family:'Space Grotesk';font-size:clamp(18px,3vw,28px);color:var(--text);
+  min-height:1.4em;margin:6px 0 22px;font-weight:600}
+.type-line .caret{color:var(--cyan);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero p.lead{color:var(--muted);max-width:600px;font-size:17px;margin:0 0 30px}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:15px;
+  padding:13px 22px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:.22s;font-family:'Space Grotesk'}
+.btn.primary{background:linear-gradient(120deg,var(--primary),#5b8cff);color:#fff;box-shadow:0 8px 30px rgba(124,92,255,.4)}
+.btn.primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(124,92,255,.55)}
+.btn.ghost{background:rgba(255,255,255,.03);border-color:var(--line);color:var(--text)}
+.btn.ghost:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-3px)}
+.press{font-family:'Press Start 2P';font-size:11px}
+.stat-strip{display:flex;gap:26px;flex-wrap:wrap;margin-top:44px}
+.stat b{font-family:'Space Grotesk';font-size:30px;display:block;color:var(--text)}
+.stat span{color:var(--muted);font-size:13px}
+.stat b .u{color:var(--cyan)}
+
+/* ---------- Panels / grids ---------- */
+.panel{background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);
+  border-radius:16px;padding:22px}
+.skill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.skill h4{margin:0 0 12px;font-size:15px;color:var(--cyan);display:flex;align-items:center;gap:8px}
+.skill h4::before{content:"";width:9px;height:9px;background:var(--cyan);border-radius:2px;box-shadow:0 0 10px var(--cyan)}
+.bar{margin-bottom:12px}
+.bar .lab{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px;color:var(--text)}
+.bar .lab i{color:var(--muted);font-style:normal;font-size:12px}
+.track{height:8px;border-radius:6px;background:rgba(255,255,255,.06);overflow:hidden}
+.fill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--primary),var(--cyan));transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.tag{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:7px;padding:4px 9px;background:rgba(255,255,255,.02)}
+
+/* ---------- Timeline ---------- */
+.timeline{position:relative;margin-top:10px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(var(--primary),var(--cyan),transparent)}
+.tl{position:relative;margin-bottom:26px}
+.tl::before{content:"";position:absolute;left:-26px;top:5px;width:14px;height:14px;border-radius:4px;
+  background:var(--bg);border:2px solid var(--cyan);box-shadow:0 0 12px rgba(52,224,255,.6)}
+.tl .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.tl .role{font-family:'Space Grotesk';font-weight:700;font-size:17px}
+.tl .when{color:var(--muted);font-size:13px;white-space:nowrap}
+.tl .co{color:var(--primary);font-weight:600;font-size:14.5px}
+.tl .co .loc{color:var(--muted);font-weight:400}
+.tl p{margin:7px 0 0;color:var(--muted);font-size:14.5px}
+
+/* ---------- Projects ---------- */
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);
+  border-radius:16px;padding:20px;transition:.25s;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px at var(--mx,50%) var(--my,0),rgba(124,92,255,.16),transparent 70%);opacity:0;transition:opacity .3s}
+.card:hover{transform:translateY(-6px);border-color:rgba(52,224,255,.45)}
+.card:hover::before{opacity:1}
+.card .pn{font-family:'Space Grotesk';font-weight:700;font-size:19px;margin:0 0 4px}
+.card .pt{font-size:12px;color:var(--cyan);margin-bottom:10px;letter-spacing:.02em}
+.card p{color:var(--muted);font-size:14px;margin:0 0 16px}
+.card .go{font-size:13.5px;color:var(--text);font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.card .go .arw{transition:transform .2s}
+.card:hover .go .arw{transform:translateX(5px)}
+.card .go.dim{color:var(--muted)}
+
+/* ---------- Awards ---------- */
+.awards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.aw{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:12px;padding:13px 16px}
+.aw .medal{font-family:'Press Start 2P';font-size:10px;padding:8px 9px;border-radius:8px;white-space:nowrap}
+.aw .g{background:linear-gradient(120deg,#ffd45c,#ff9d3c);color:#3a2a00}
+.aw .s{background:linear-gradient(120deg,#d7e0ff,#9fb0e6);color:#1a2140}
+.aw .txt b{display:block;font-size:14px;font-family:'Space Grotesk'}
+.aw .txt span{color:var(--muted);font-size:12.5px}
+
+/* ---------- Resume ---------- */
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.res{background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:16px;padding:22px;text-align:center;transition:.25s}
+.res:hover{transform:translateY(-5px);border-color:var(--primary)}
+.res .ic{font-size:30px;margin-bottom:8px}
+.res h4{margin:0 0 4px;font-size:18px}
+.res .rs{color:var(--muted);font-size:13px;margin-bottom:16px;min-height:2.4em}
+.res .dl{display:flex;gap:7px;justify-content:center}
+.res .dl a{font-family:'Press Start 2P';font-size:9px;color:var(--cyan);border:1px solid var(--line);
+  border-radius:8px;padding:9px 8px;transition:.2s;background:rgba(52,224,255,.04)}
+.res .dl a:hover{background:var(--cyan);color:#08101f;box-shadow:0 0 14px rgba(52,224,255,.5)}
+.res .dl a.act{background:var(--cyan);color:#08101f}
+
+/* ---------- Contact ---------- */
+.contact{text-align:center}
+.contact .big{font-size:clamp(28px,5vw,52px);margin:6px 0 12px}
+.contact .big .grad{background:linear-gradient(120deg,var(--primary),var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}
+.social{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.social a{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:12px;
+  padding:13px 20px;color:var(--text);font-weight:600;background:rgba(255,255,255,.02);transition:.22s}
+.social a:hover{transform:translateY(-3px);border-color:var(--cyan);color:var(--cyan)}
+footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--muted);font-size:13px}
+footer .hint{font-size:11px;opacity:.6;margin-top:6px}
+
+/* ---------- Toast / easter egg ---------- */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
+  background:linear-gradient(120deg,#151b40,#0e1330);border:1px solid var(--cyan);border-radius:12px;
+  padding:12px 18px;display:flex;align-items:center;gap:12px;z-index:100;transition:transform .5s cubic-bezier(.2,.8,.2,1);box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast .a{font-family:'Press Start 2P';font-size:9px;color:var(--cyan)}
+.toast .b{font-size:13px;color:var(--text)}
+.toast .ico{font-size:22px}
+
+@media(max-width:820px){
+  .skill-grid,.proj-grid,.res-grid,.awards{grid-template-columns:1fr}
+  nav.links{display:none}
+  nav.links.open{display:flex;position:absolute;top:60px;right:12px;flex-direction:column;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;gap:14px}
+  .menu-btn{display:inline-block}
+  .proj-grid{grid-template-columns:1fr}
+}
+@media(min-width:560px) and (max-width:820px){.proj-grid,.res-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="aurora"></div>
+
+<header class="nav">
+  <div class="nav-in">
+    <a href="#top" class="logo"><span class="dot"></span> FSL</a>
+    <nav class="links" id="navlinks">
+      <a href="#about" data-i="nav.about">About</a>
+      <a href="#skills" data-i="nav.skills">Skills</a>
+      <a href="#experience" data-i="nav.experience">Experience</a>
+      <a href="#projects" data-i="nav.projects">Games</a>
+      <a href="#awards" data-i="nav.awards">Awards</a>
+      <a href="#resume" data-i="nav.resume">Résumé</a>
+      <a href="#contact" data-i="nav.contact">Contact</a>
+    </nav>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="lang" id="lang">
+        <button data-l="en" class="active">EN</button>
+        <button data-l="fr">FR</button>
+        <button data-l="ptbr">PT</button>
+      </div>
+      <button class="menu-btn" id="menuBtn">☰</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="badge-row" id="heroBadges"></div>
+      <h1><span data-i="hero.hi">Hi, I'm</span> <span class="grad">Fernando Silva da&nbsp;Luz</span></h1>
+      <div class="type-line"><span id="typed"></span><span class="caret">▍</span></div>
+      <p class="lead" data-i="hero.lead"></p>
+      <div class="cta-row">
+        <a href="#projects" class="btn primary press" data-i="hero.cta1">▶ PRESS START</a>
+        <a href="#resume" class="btn ghost" data-i="hero.cta2">Download résumé</a>
+      </div>
+      <div class="stat-strip" id="stats"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap reveal">
+      <span class="eyebrow" data-i="about.eyebrow">Player Bio</span>
+      <h2 class="sec-title" data-i="about.title">About</h2>
+      <div class="panel" style="font-size:16.5px;color:var(--text)">
+        <p data-i="about.p1" style="margin-top:0"></p>
+        <p data-i="about.p2" style="margin-bottom:0;color:var(--muted)"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="wrap reveal">
+      <span class="eyebrow" data-i="skills.eyebrow">Stats & Loadout</span>
+      <h2 class="sec-title" data-i="skills.title">Skills</h2>
+      <p class="sec-sub" data-i="skills.sub"></p>
+      <div class="skill-grid">
+        <div class="panel skill">
+          <h4 data-i="skills.core">Core</h4>
+          <div id="bars"></div>
+        </div>
+        <div class="panel skill">
+          <h4 data-i="skills.stack">Stack & Tools</h4>
+          <div id="stackTags" class="tags"></div>
+          <h4 style="margin-top:20px" data-i="skills.xr">XR & Platforms</h4>
+          <div id="xrTags" class="tags"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="wrap reveal">
+      <span class="eyebrow" data-i="exp.eyebrow">Campaign Log</span>
+      <h2 class="sec-title" data-i="exp.title">Experience</h2>
+      <p class="sec-sub" data-i="exp.sub"></p>
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="wrap reveal">
+      <span class="eyebrow" data-i="proj.eyebrow">Shipped Titles</span>
+      <h2 class="sec-title" data-i="proj.title">Games & Projects</h2>
+      <p class="sec-sub" data-i="proj.sub"></p>
+      <div class="proj-grid" id="projGrid"></div>
+    </div>
+  </section>
+
+  <!-- AWARDS -->
+  <section id="awards">
+    <div class="wrap reveal">
+      <span class="eyebrow" data-i="awards.eyebrow">Achievements</span>
+      <h2 class="sec-title" data-i="awards.title">Hackathon Wins</h2>
+      <p class="sec-sub" data-i="awards.sub"></p>
+      <div class="awards" id="awardGrid"></div>
+    </div>
+  </section>
+
+  <!-- RESUME -->
+  <section id="resume">
+    <div class="wrap reveal">
+      <span class="eyebrow" data-i="res.eyebrow">Choose your class</span>
+      <h2 class="sec-title" data-i="res.title">Résumés</h2>
+      <p class="sec-sub" data-i="res.sub"></p>
+      <div class="res-grid" id="resGrid"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="wrap reveal contact">
+      <span class="eyebrow" data-i="contact.eyebrow">New Game +</span>
+      <h2 class="big"><span data-i="contact.title">Let's build something</span> <span class="grad" data-i="contact.title2">worth playing.</span></h2>
+      <p class="sec-sub" style="margin:0 auto" data-i="contact.sub"></p>
+      <div class="social">
+        <a href="mailto:fernandosilvadaluz@gmail.com">✉ <span>Email</span></a>
+        <a href="https://www.linkedin.com/in/fernandosilvadaluz/" target="_blank" rel="noopener">in <span>LinkedIn</span></a>
+        <a href="https://github.com/FernandoSLuz" target="_blank" rel="noopener">⌥ <span>GitHub</span></a>
+        <a href="tel:+14387781394">☎ <span>+1 438 778 1394</span></a>
+      </div>
+      <p style="color:var(--muted);margin-top:24px" data-i="contact.loc">📍 Montréal, QC, Canada</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr"></span> Fernando Silva da Luz · <span class="arcade" style="font-size:9px;color:var(--muted)">built with pixels & C#</span></span>
+    <div class="hint" data-i="footer.hint">psst… try the Konami code ↑↑↓↓←→←→BA</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast">
+  <span class="ico">🏆</span>
+  <div><div class="a" data-i="toast.a">Achievement unlocked</div><div class="b" id="toastMsg"></div></div>
+</div>
+
+<script>
+/* ============ i18n DATA ============ */
+const RESUME_LANG = { en:"EN", fr:"FR", ptbr:"PT-BR" };
+const BARS = [
+  {en:"Unity & C#",fr:"Unity et C#",ptbr:"Unity e C#", lvl:96, yrs:{en:"10+ yrs",fr:"10+ ans",ptbr:"10+ anos"}},
+  {en:"Gameplay & Tools",fr:"Gameplay et outils",ptbr:"Gameplay e ferramentas", lvl:92, yrs:{en:"Systems, UX",fr:"Systèmes, UX",ptbr:"Sistemas, UX"}},
+  {en:"Godot / GDScript",fr:"Godot / GDScript",ptbr:"Godot / GDScript", lvl:74, yrs:{en:"Growing",fr:"En progression",ptbr:"Em evolução"}},
+  {en:"XR — AR / VR / MR",fr:"RX — RA / RV / RM",ptbr:"RX — RA / RV / RM", lvl:90, yrs:{en:"HoloLens, Quest",fr:"HoloLens, Quest",ptbr:"HoloLens, Quest"}},
+  {en:"Backend & Cloud",fr:"Backend et cloud",ptbr:"Backend e nuvem", lvl:85, yrs:{en:"FastAPI, Azure",fr:"FastAPI, Azure",ptbr:"FastAPI, Azure"}},
+  {en:"Computer Vision / AI",fr:"Vision par ordinateur / IA",ptbr:"Visão computacional / IA", lvl:78, yrs:{en:"OpenCV, TF",fr:"OpenCV, TF",ptbr:"OpenCV, TF"}},
+];
+const STACK = ["C#","Unity3D","Godot","Python","TypeScript","FastAPI","Azure Functions","PlayFab","SocketIO","MongoDB","MySQL","Docker","OpenCV","TensorFlow","Detectron2","Git"];
+const XR = ["HoloLens 2","Meta Quest","HTC Vive","Oculus Rift","AR Foundation","Android","iOS","PC"];
+
+const EXP = [
+  {co:"Zimmer Biomet", loc:"Montréal, QC", when:{en:"Aug 2023 – Present",fr:"août 2023 – Présent",ptbr:"ago 2023 – Atual"},
+    role:{en:"Senior Software Developer",fr:"Développeur logiciel senior",ptbr:"Desenvolvedor de Software Sênior"},
+    d:{en:"Real-time 3D / mixed-reality software on HoloLens 2 for surgical engineering (Unity, C#) — medical-grade quality.",
+       fr:"Logiciels 3D temps réel / réalité mixte sur HoloLens 2 pour l'ingénierie chirurgicale (Unity, C#) — qualité médicale.",
+       ptbr:"Software 3D em tempo real / realidade mista no HoloLens 2 para engenharia cirúrgica (Unity, C#) — qualidade médica."}},
+  {co:"Prologue AI", loc:"Montréal, QC", when:{en:"Jun 2022 – Jul 2023",fr:"juin 2022 – juil. 2023",ptbr:"jun 2022 – jul 2023"},
+    role:{en:"Senior Unity Developer",fr:"Développeur Unity senior",ptbr:"Desenvolvedor Unity Sênior"},
+    d:{en:"Shipped CrimeTrip (AR game) from prototype to store. Built a modular event-driven architecture, shaders & a real-time co-creation system. Mentored an intern.",
+       fr:"Livraison de CrimeTrip (jeu RA) du prototype à la boutique. Architecture modulaire événementielle, shaders et système de co-création en temps réel. Mentorat d'un stagiaire.",
+       ptbr:"Entrega do CrimeTrip (jogo RA) do protótipo à loja. Arquitetura modular orientada a eventos, shaders e sistema de cocriação em tempo real. Mentoria de estagiário."}},
+  {co:"Down Below", loc:{en:"Indie Game Studio",fr:"Studio de jeux indépendant",ptbr:"Estúdio de jogos indie"}, when:{en:"Sep 2021 – May 2022",fr:"sept. 2021 – mai 2022",ptbr:"set 2021 – mai 2022"},
+    role:{en:"Founder & Tech Lead",fr:"Fondateur et responsable technique",ptbr:"Fundador e Líder Técnico"},
+    d:{en:"Led design & production of Down Below, a turn-based JRPG inspired by Darkest Dungeon — combat, party and loot systems.",
+       fr:"Direction de la conception et production de Down Below, un JRPG au tour par tour inspiré de Darkest Dungeon — combat, équipe et butin.",
+       ptbr:"Direção de design e produção de Down Below, um JRPG por turnos inspirado em Darkest Dungeon — combate, grupo e recompensas."}},
+  {co:"BairesDev", loc:{en:"Remote",fr:"À distance",ptbr:"Remoto"}, when:{en:"Aug 2020 – Dec 2021",fr:"août 2020 – déc. 2021",ptbr:"ago 2020 – dez 2021"},
+    role:{en:"Software Engineer — Computer Vision",fr:"Ingénieur logiciel — vision par ordinateur",ptbr:"Engenheiro de Software — Visão Computacional"},
+    d:{en:"Deep-learning pipelines for real-time detection, measurement & classification of physical objects (real estate). Python, Detectron2, OpenCV, TensorFlow.",
+       fr:"Pipelines d'apprentissage profond pour la détection, mesure et classification en temps réel d'objets physiques (immobilier). Python, Detectron2, OpenCV, TensorFlow.",
+       ptbr:"Pipelines de deep learning para detecção, medição e classificação em tempo real de objetos físicos (imobiliário). Python, Detectron2, OpenCV, TensorFlow."}},
+  {co:"RSTcom", loc:{en:"São Paulo, BR",fr:"São Paulo, Brésil",ptbr:"São Paulo, BR"}, when:{en:"Mar 2018 – Nov 2019",fr:"mars 2018 – nov. 2019",ptbr:"mar 2018 – nov 2019"},
+    role:{en:"IT Director / Developer",fr:"Directeur TI / Développeur",ptbr:"Diretor de TI / Desenvolvedor"},
+    d:{en:"Led a dev team and shipped 12+ mobile apps to the App Store and Google Play for the events market.",
+       fr:"Direction d'une équipe et livraison de plus de 12 applis mobiles sur l'App Store et Google Play pour le marché événementiel.",
+       ptbr:"Liderança de equipe e entrega de mais de 12 apps mobile na App Store e Google Play para o mercado de eventos."}},
+  {co:"Virtual Light · Expansão · TeleIDEA · HP", loc:{en:"São Paulo, BR",fr:"São Paulo, Brésil",ptbr:"São Paulo, BR"}, when:{en:"2010 – 2020",fr:"2010 – 2020",ptbr:"2010 – 2020"},
+    role:{en:"Founder, Unity Dev & earlier roles",fr:"Fondateur, dev Unity et postes antérieurs",ptbr:"Fundador, Dev Unity e cargos anteriores"},
+    d:{en:"Founded a VR real-estate startup (accelerated 2017); senior Unity dev for events & training; set-top-box developer; bilingual tech support for 19 enterprise clients.",
+       fr:"Fondation d'une startup RV immobilier (accélérée en 2017) ; dev Unity senior pour événements et formation ; développeur set-top-box ; support technique bilingue pour 19 clients.",
+       ptbr:"Fundação de startup de RV imobiliária (acelerada em 2017); dev Unity sênior para eventos e treinamento; desenvolvedor set-top-box; suporte técnico bilíngue para 19 clientes."}},
+];
+
+const PROJECTS = [
+  {n:"CrimeTrip", t:"Unity · AR · FastAPI · Azure · PlayFab", link:"https://www.prologuexr.com/crimetrip",
+    d:{en:"A true-crime AR adventure — investigate six cold cases inside augmented-reality crime scenes.",
+       fr:"Une aventure policière en RA — enquêtez sur six affaires non résolues dans des scènes de crime en RA.",
+       ptbr:"Uma aventura de true crime em RA — investigue seis casos arquivados em cenas de crime em RA."}},
+  {n:"Viva La Execution!", t:"Unity · FastAPI · OpenAI · ElevenLabs", link:"https://danyboyyy.itch.io/viva-la-execution",
+    d:{en:"A comedic narrative game set in the French Revolution, with dynamic AI-driven dialogue.",
+       fr:"Un jeu narratif humoristique dans la Révolution française, aux dialogues IA dynamiques.",
+       ptbr:"Um jogo narrativo de humor na Revolução Francesa, com diálogos dinâmicos por IA."}},
+  {n:"Down Below", t:"Unity3D · C# · Turn-based JRPG", link:"https://vimeo.com/697498158",
+    d:{en:"A turn-based JRPG inspired by Darkest Dungeon — party builder, combat and loot.",
+       fr:"Un JRPG au tour par tour inspiré de Darkest Dungeon — équipe, combat et butin.",
+       ptbr:"Um JRPG por turnos inspirado em Darkest Dungeon — grupo, combate e recompensas."}},
+  {n:"Janos", t:"Unity · Oculus Rift · Game Jam", link:"https://www.youtube.com/watch?v=eFgFCMwm-5U",
+    d:{en:"A VR puzzle escape room built comfort-first to prevent motion sickness. Made at SPJam.",
+       fr:"Un escape room de réflexion en RV conçu pour éviter le mal des transports. Réalisé au SPJam.",
+       ptbr:"Um escape room de puzzle em RV feito para evitar enjoo. Criado no SPJam."}},
+  {n:"Missão Fundo do Mar", t:"Unity · Computer Vision · Video-mapping", link:"https://vimeo.com/359048835",
+    d:{en:"An interactive projection wall using AI image recognition to bring kids' drawings to life.",
+       fr:"Un mur de projection interactif utilisant la reconnaissance d'images par IA pour animer les dessins d'enfants.",
+       ptbr:"Uma parede de projeção interativa usando reconhecimento de imagem por IA para dar vida a desenhos de crianças."}},
+  {n:{en:"More on GitHub",fr:"Plus sur GitHub",ptbr:"Mais no GitHub"}, t:"match3 · godot · ai-pulse · yaw_vr", link:"https://github.com/FernandoSLuz", more:true,
+    d:{en:"Motion-sim projects, Godot experiments, a match-3, an AI radar app and more open-source work.",
+       fr:"Projets de motion-sim, expériences Godot, un match-3, une appli radar IA et d'autres travaux open-source.",
+       ptbr:"Projetos de motion-sim, experimentos em Godot, um match-3, um app radar de IA e mais código aberto."}},
+];
+
+const AWARDS = [
+  {p:"1st", g:1, n:"EIT Digital DeepHack — Olivetti", loc:{en:"Trento, Italy · 2019",fr:"Trente, Italie · 2019",ptbr:"Trento, Itália · 2019"}},
+  {p:"1st", g:1, n:"HackaEngage — Campus Party", loc:{en:"2019",fr:"2019",ptbr:"2019"}},
+  {p:"1st", g:1, n:"FIESP — Digital Government", loc:{en:"2019",fr:"Gouvernement numérique · 2019",ptbr:"Governo Digital · 2019"}},
+  {p:"1st", g:1, n:"VISA Hackathon — Agitech", loc:{en:"2017",fr:"2017",ptbr:"2017"}},
+  {p:"2nd", g:0, n:"IBM BlueHack", loc:{en:"2017",fr:"2017",ptbr:"2017"}},
+  {p:"2nd", g:0, n:"Synvia Hackathon", loc:{en:"2019",fr:"2019",ptbr:"2019"}},
+  {p:"2nd", g:0, n:"Uber Hack", loc:{en:"2019",fr:"2019",ptbr:"2019"}},
+  {p:"7×", g:1, n:{en:"Hackathon podiums total",fr:"podiums de hackathon au total",ptbr:"pódios de hackathon no total"}, loc:{en:"4 gold · 3 silver",fr:"4 or · 3 argent",ptbr:"4 ouro · 3 prata"}},
+];
+
+const RESUMES = [
+  {key:"GameDev", ic:"🎮", h:{en:"Game Developer",fr:"Développeur de jeux",ptbr:"Desenvolvedor de Jogos"},
+    s:{en:"Gameplay engineer — shipped games, tools & polish.",fr:"Programmeur gameplay — jeux, outils et finition.",ptbr:"Programador de gameplay — jogos, ferramentas e polimento."}},
+  {key:"UnityDev", ic:"🕹️", h:{en:"Unity Developer",fr:"Développeur Unity",ptbr:"Desenvolvedor Unity"},
+    s:{en:"C# engineer — real-time 3D, XR and tools in Unity.",fr:"Ingénieur C# — 3D temps réel, RX et outils sous Unity.",ptbr:"Engenheiro C# — 3D em tempo real, RX e ferramentas em Unity."}},
+  {key:"SoftwareDev", ic:"💻", h:{en:"Software Developer",fr:"Développeur logiciel",ptbr:"Desenvolvedor de Software"},
+    s:{en:"Full-stack, backend & computer vision — plus gameplay.",fr:"Full-stack, backend et vision par ordinateur — et gameplay.",ptbr:"Full-stack, backend e visão computacional — e gameplay."}},
+];
+
+const T = {
+  en:{
+    nav:{about:"About",skills:"Skills",experience:"Experience",projects:"Games",awards:"Awards",resume:"Résumé",contact:"Contact"},
+    hero:{hi:"Hi, I'm",lead:"Game developer with 13+ years shipping games and interactive experiences across mobile, PC and XR. Based in Montréal — Unity & C# specialist, now also building in Godot.",cta1:"▶ PRESS START",cta2:"Download résumé",
+      badges:["🎮 Game Developer","🏆 7× Hackathon Winner","🌎 Montréal, QC"],
+      typed:["Game Developer","Gameplay Engineer","Unity & C# Specialist","One of the first Unity Certified Devs"]},
+    stats:[["13+","Years shipping"],["7×","Hackathon wins"],["2","Degrees · CS & Game Design"],["3","Languages spoken"]],
+    about:{eyebrow:"Player Bio",title:"About",
+      p1:"I turn concepts into shipped games. Over 13+ years I've built games, tools and real-time 3D/XR software — from turn-based JRPG systems and AR adventures to mixed-reality apps for surgical engineering. I was one of the first Unity Certified Developers in the world, and I hold degrees in both Game Design and Computer Science.",
+      p2:"I love the whole craft: gameplay systems, tools, shaders and the polish that makes a game feel great — backed by solid backend and computer-vision engineering. Right now I'm focused on game development, and always leveling up (currently in Godot and French)."},
+    skills:{eyebrow:"Stats & Loadout",title:"Skills",sub:"A decade-plus in Unity/C#, with backend, cloud and computer-vision depth behind the games.",core:"Core Stats",stack:"Stack & Tools",xr:"XR & Platforms"},
+    exp:{eyebrow:"Campaign Log",title:"Experience",sub:"From São Paulo studios and startups to XR and medical engineering in Montréal."},
+    proj:{eyebrow:"Shipped Titles",title:"Games & Projects",sub:"A selection of games and interactive experiences — click through for demos and builds."},
+    awards:{eyebrow:"Achievements",title:"Hackathon Wins",sub:"Seven podiums across Brazil and Italy — building fast, useful things under pressure."},
+    res:{eyebrow:"Choose your class",title:"Résumés",sub:"Three tailored résumés, each in English, French and Portuguese. Pick a role and a language.",dl:"Download"},
+    contact:{eyebrow:"New Game +",title:"Let's build something",title2:"worth playing.",sub:"Open to game developer roles in Montréal and remote. Let's talk.",loc:"📍 Montréal, QC, Canada"},
+    footer:{hint:"psst… try the Konami code ↑↑↓↓←→←→BA"},
+    toast:{a:"Achievement unlocked",konami:"Secret Level — you found the Konami code! 🎉",scroll:"Explorer — you started scrolling the campaign."}
+  },
+  fr:{
+    nav:{about:"À propos",skills:"Compétences",experience:"Expérience",projects:"Jeux",awards:"Prix",resume:"CV",contact:"Contact"},
+    hero:{hi:"Salut, je suis",lead:"Développeur de jeux avec plus de 13 ans à livrer des jeux et des expériences interactives sur mobile, PC et RX. Basé à Montréal — spécialiste Unity et C#, je développe aussi désormais sous Godot.",cta1:"▶ APPUYER START",cta2:"Télécharger le CV",
+      badges:["🎮 Développeur de jeux","🏆 7× lauréat de hackathons","🌎 Montréal, QC"],
+      typed:["Développeur de jeux","Programmeur gameplay","Spécialiste Unity et C#","Un des premiers certifiés Unity"]},
+    stats:[["13+","Ans d'expérience"],["7×","Victoires en hackathon"],["2","Diplômes · Info et Game Design"],["3","Langues parlées"]],
+    about:{eyebrow:"Bio du joueur",title:"À propos",
+      p1:"Je transforme des concepts en jeux livrés. En plus de 13 ans, j'ai créé des jeux, des outils et des logiciels 3D/RX temps réel — des systèmes de JRPG au tour par tour et des aventures en RA jusqu'aux applications de réalité mixte pour l'ingénierie chirurgicale. J'ai été l'un des premiers développeurs certifiés Unity au monde, et je détiens des diplômes en game design et en informatique.",
+      p2:"J'aime tout le métier : systèmes de gameplay, outils, shaders et la finition qui rend un jeu agréable — le tout appuyé par une solide ingénierie backend et vision par ordinateur. Je suis actuellement axé sur le développement de jeux, et je continue de monter de niveau (en ce moment : Godot et le français)."},
+    skills:{eyebrow:"Stats et équipement",title:"Compétences",sub:"Plus d'une décennie en Unity/C#, avec une profondeur backend, cloud et vision par ordinateur derrière les jeux.",core:"Statistiques",stack:"Stack et outils",xr:"RX et plateformes"},
+    exp:{eyebrow:"Journal de campagne",title:"Expérience",sub:"Des studios et startups de São Paulo à la RX et l'ingénierie médicale à Montréal."},
+    proj:{eyebrow:"Titres livrés",title:"Jeux et projets",sub:"Une sélection de jeux et d'expériences interactives — cliquez pour les démos et les builds."},
+    awards:{eyebrow:"Succès",title:"Victoires en hackathon",sub:"Sept podiums au Brésil et en Italie — construire vite des choses utiles sous pression."},
+    res:{eyebrow:"Choisis ta classe",title:"CV",sub:"Trois CV adaptés, chacun en anglais, français et portugais. Choisissez un poste et une langue.",dl:"Télécharger"},
+    contact:{eyebrow:"Nouvelle partie +",title:"Créons quelque chose",title2:"qui vaut la peine d'être joué.",sub:"Ouvert aux postes de développeur de jeux à Montréal et à distance. Parlons-en.",loc:"📍 Montréal, QC, Canada"},
+    footer:{hint:"psst… essayez le code Konami ↑↑↓↓←→←→BA"},
+    toast:{a:"Succès débloqué",konami:"Niveau secret — vous avez trouvé le code Konami ! 🎉",scroll:"Explorateur — vous avez commencé la campagne."}
+  },
+  ptbr:{
+    nav:{about:"Sobre",skills:"Skills",experience:"Experiência",projects:"Jogos",awards:"Prêmios",resume:"Currículo",contact:"Contato"},
+    hero:{hi:"Oi, eu sou o",lead:"Desenvolvedor de jogos com mais de 13 anos entregando jogos e experiências interativas em mobile, PC e RX. Em Montréal — especialista em Unity e C#, hoje também desenvolvendo em Godot.",cta1:"▶ APERTE START",cta2:"Baixar currículo",
+      badges:["🎮 Desenvolvedor de Jogos","🏆 7× vencedor de hackathons","🌎 Montréal, QC"],
+      typed:["Desenvolvedor de Jogos","Programador de Gameplay","Especialista em Unity e C#","Um dos primeiros certificados Unity"]},
+    stats:[["13+","Anos de carreira"],["7×","Vitórias em hackathons"],["2","Formações · CC e Game Design"],["3","Idiomas falados"]],
+    about:{eyebrow:"Bio do jogador",title:"Sobre",
+      p1:"Eu transformo conceitos em jogos entregues. Em mais de 13 anos criei jogos, ferramentas e software 3D/RX em tempo real — de sistemas de JRPG por turnos e aventuras em RA a aplicações de realidade mista para engenharia cirúrgica. Fui um dos primeiros desenvolvedores certificados Unity do mundo, e tenho formação em Game Design e em Ciência da Computação.",
+      p2:"Amo o ofício inteiro: sistemas de gameplay, ferramentas, shaders e o polimento que faz um jogo funcionar bem — apoiado por uma sólida engenharia de backend e visão computacional. Hoje estou focado em desenvolvimento de jogos, e sempre subindo de nível (no momento: Godot e francês)."},
+    skills:{eyebrow:"Status e equipamento",title:"Skills",sub:"Mais de uma década em Unity/C#, com profundidade em backend, nuvem e visão computacional por trás dos jogos.",core:"Status principais",stack:"Stack e ferramentas",xr:"RX e plataformas"},
+    exp:{eyebrow:"Diário de campanha",title:"Experiência",sub:"De estúdios e startups em São Paulo à RX e engenharia médica em Montréal."},
+    proj:{eyebrow:"Títulos lançados",title:"Jogos e Projetos",sub:"Uma seleção de jogos e experiências interativas — clique para ver demos e builds."},
+    awards:{eyebrow:"Conquistas",title:"Vitórias em Hackathons",sub:"Sete pódios no Brasil e na Itália — construir rápido coisas úteis sob pressão."},
+    res:{eyebrow:"Escolha sua classe",title:"Currículos",sub:"Três currículos personalizados, cada um em inglês, francês e português. Escolha um cargo e um idioma.",dl:"Baixar"},
+    contact:{eyebrow:"New Game +",title:"Vamos criar algo",title2:"que valha a pena jogar.",sub:"Aberto a vagas de desenvolvedor de jogos em Montréal e remoto. Vamos conversar.",loc:"📍 Montréal, QC, Canadá"},
+    footer:{hint:"psiu… tente o código Konami ↑↑↓↓←→←→BA"},
+    toast:{a:"Conquista desbloqueada",konami:"Fase secreta — você achou o código Konami! 🎉",scroll:"Explorador — você começou a campanha."}
+  }
+};
+
+/* ============ RENDER ============ */
+let LANG = "en";
+const $ = s => document.querySelector(s);
+const val = (o,l)=> (o && typeof o==="object" && !Array.isArray(o)) ? (o[l]!==undefined?o[l]:o.en) : o;
+
+function applyI18n(){
+  const t = T[LANG];
+  document.documentElement.lang = LANG==="ptbr"?"pt-BR":LANG;
+  document.querySelectorAll("[data-i]").forEach(el=>{
+    const path = el.getAttribute("data-i").split(".");
+    let v = t; for(const k of path){ v = v && v[k]; }
+    if(v!==undefined && typeof v==="string") el.textContent = v;
+  });
+  // badges
+  $("#heroBadges").innerHTML = t.hero.badges.map(b=>`<span class="chip">${b}</span>`).join("");
+  // stats
+  $("#stats").innerHTML = t.stats.map(s=>`<div class="stat"><b>${s[0].replace(/(\+|×)/,'<span class="u">$1</span>')}</b><span>${s[1]}</span></div>`).join("");
+  // bars
+  $("#bars").innerHTML = BARS.map(b=>`<div class="bar"><div class="lab"><span>${val(b,LANG)}</span><i>${val(b.yrs,LANG)}</i></div><div class="track"><div class="fill" data-w="${b.lvl}"></div></div></div>`).join("");
+  // stack + xr
+  $("#stackTags").innerHTML = STACK.map(s=>`<span class="tag">${s}</span>`).join("");
+  $("#xrTags").innerHTML = XR.map(s=>`<span class="tag">${s}</span>`).join("");
+  // timeline
+  $("#timeline").innerHTML = EXP.map(e=>`<div class="tl"><div class="top"><span class="role">${val(e.role,LANG)}</span><span class="when">${val(e.when,LANG)}</span></div><div class="co">${e.co} <span class="loc">· ${val(e.loc,LANG)}</span></div><p>${val(e.d,LANG)}</p></div>`).join("");
+  // projects
+  $("#projGrid").innerHTML = PROJECTS.map(p=>{
+    const go = p.more ? "★ GitHub" : "▶ "+({en:"Play / Watch",fr:"Jouer / Voir",ptbr:"Jogar / Ver"})[LANG];
+    return `<a class="card" href="${p.link}" target="_blank" rel="noopener"><div class="pn">${val(p.n,LANG)}</div><div class="pt">${p.t}</div><p>${val(p.d,LANG)}</p><span class="go ${p.more?'dim':''}">${go}<span class="arw">→</span></span></a>`;
+  }).join("");
+  // awards
+  $("#awardGrid").innerHTML = AWARDS.map(a=>`<div class="aw"><span class="medal ${a.g?'g':'s'}">${a.p}</span><div class="txt"><b>${val(a.n,LANG)}</b><span>${val(a.loc,LANG)}</span></div></div>`).join("");
+  // resumes
+  const langs = ["en","fr","ptbr"];
+  $("#resGrid").innerHTML = RESUMES.map(r=>{
+    const dls = langs.map(l=>`<a href="assets/resumes/Fernando_Silva_da_Luz_${r.key}_${RESUME_LANG[l]}.pdf" download class="${l===LANG?'act':''}">${l==="ptbr"?"PT":l.toUpperCase()}</a>`).join("");
+    return `<div class="res"><div class="ic">${r.ic}</div><h4>${val(r.h,LANG)}</h4><div class="rs">${val(r.s,LANG)}</div><div class="dl">${dls}</div></div>`;
+  }).join("");
+  startTyping();
+}
+
+/* language buttons */
+$("#lang").addEventListener("click",e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  LANG = b.dataset.l;
+  document.querySelectorAll("#lang button").forEach(x=>x.classList.toggle("active",x===b));
+  applyI18n();
+  if(location.hash) location.hash=location.hash; // keep position
+});
+
+/* mobile menu */
+$("#menuBtn").addEventListener("click",()=> $("#navlinks").classList.toggle("open"));
+document.querySelectorAll("#navlinks a").forEach(a=>a.addEventListener("click",()=>$("#navlinks").classList.remove("open")));
+
+/* typing effect */
+let typeTimer=null, typeIdx=0;
+function startTyping(){
+  clearTimeout(typeTimer);
+  const arr = T[LANG].hero.typed; const el=$("#typed"); if(!el) return;
+  let phrase=0;
+  function loop(){
+    const word = arr[phrase%arr.length];
+    let i=0;
+    (function typeIn(){
+      el.textContent = word.slice(0,i);
+      if(i<=word.length){ i++; typeTimer=setTimeout(typeIn,45); }
+      else typeTimer=setTimeout(()=>eraseOut(word.length),1500);
+    })();
+    function eraseOut(j){
+      el.textContent = word.slice(0,j);
+      if(j>=0){ typeTimer=setTimeout(()=>eraseOut(j-1),25); }
+      else { phrase++; typeTimer=setTimeout(loop,180); }
+    }
+  }
+  loop();
+}
+
+/* reveal on scroll + skill bars */
+const io = new IntersectionObserver((ents)=>{
+  ents.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add("in");
+    en.target.querySelectorAll?.(".fill").forEach(f=>f.style.width=f.dataset.w+"%");
+    io.unobserve(en.target);} });
+},{threshold:.12});
+function observeAll(){ document.querySelectorAll(".reveal").forEach(el=>io.observe(el)); }
+
+/* card glow follows cursor */
+document.addEventListener("mousemove",e=>{
+  const c=e.target.closest?.(".card"); if(!c)return;
+  const r=c.getBoundingClientRect(); c.style.setProperty("--mx",(e.clientX-r.left)+"px"); c.style.setProperty("--my",(e.clientY-r.top)+"px");
+});
+
+/* toast */
+let toastT=null;
+function toast(msg){ $("#toastMsg").textContent=msg; $("#toast").classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(()=>$("#toast").classList.remove("show"),4200); }
+let scrolled=false;
+window.addEventListener("scroll",()=>{ if(!scrolled && window.scrollY>400){ scrolled=true; toast(T[LANG].toast.scroll);} },{passive:true});
+
+/* konami */
+const seq=["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+let ki=0;
+window.addEventListener("keydown",e=>{
+  const k=e.key.length===1?e.key.toLowerCase():e.key;
+  ki = (k===seq[ki])?ki+1:(k===seq[0]?1:0);
+  if(ki===seq.length){ ki=0; konami(); }
+});
+function konami(){
+  toast(T[LANG].toast.konami);
+  for(let i=0;i<80;i++){
+    const s=document.createElement("div");
+    s.textContent=["🎮","🕹️","🏆","⭐","👾","💜","🎯"][i%7];
+    s.style.cssText=`position:fixed;left:${Math.random()*100}vw;top:-40px;font-size:${14+Math.random()*20}px;z-index:200;pointer-events:none;transition:transform 2.6s linear,opacity 2.6s`;
+    document.body.appendChild(s);
+    requestAnimationFrame(()=>{ s.style.transform=`translateY(${100+Math.random()*20}vh) rotate(${Math.random()*720-360}deg)`; s.style.opacity="0"; });
+    setTimeout(()=>s.remove(),2700);
+  }
+  document.documentElement.style.setProperty("--cyan","#7dfcb0");
+  setTimeout(()=>document.documentElement.style.setProperty("--cyan","#34e0ff"),2600);
+}
+
+/* starfield */
+(function(){
+  const c=$("#stars"), x=c.getContext("2d"); let w,h,stars;
+  function resize(){ w=c.width=innerWidth; h=c.height=innerHeight;
+    stars=Array.from({length:Math.min(140,Math.floor(w*h/14000))},()=>({x:Math.random()*w,y:Math.random()*h,z:Math.random()*1+.3,s:Math.random()*1.4+.3}));
+  }
+  function tick(){
+    x.clearRect(0,0,w,h);
+    for(const st of stars){
+      st.y+=st.z*.25; if(st.y>h){st.y=0;st.x=Math.random()*w;}
+      x.globalAlpha=.4+st.z*.4;
+      x.fillStyle= st.z>1?"#34e0ff":"#8f8fff";
+      x.fillRect(st.x,st.y,st.s,st.s);
+    }
+    requestAnimationFrame(tick);
+  }
+  addEventListener("resize",resize); resize(); tick();
+})();
+
+$("#yr").textContent=new Date().getFullYear();
+applyI18n(); observeAll();
+/* ensure hero reveal shows immediately */
+document.querySelector(".hero")?.classList.add("in");
+</script>
+</body>
+</html>
